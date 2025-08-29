@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@model List<Category>;
+<h1>Show categories</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Category Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach(var category in Model)
+            {
+                <tr>
+                    <td>@category.Cat_Name</td>
+                    <td><a href="@Url.Action("UpdateCat", "Admin", new {id = category.CatID})">Update </a>
+
+                        <a href="@Url.Action("DeleteCat", "Admin", new {id = category.CatID})"> Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+       
+    </tbody>
+</table>
