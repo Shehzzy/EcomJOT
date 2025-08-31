@@ -15,5 +15,9 @@ namespace Ecommerce_JOT.Models
         public int price { get; set; }
 
         public int qty { get; set; }
+
+        public int CatID { get; set; }
+
+        public Category? Category { get; set; }
     }
 }

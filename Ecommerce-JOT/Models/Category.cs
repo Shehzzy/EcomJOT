@@ -8,5 +8,7 @@ namespace Ecommerce_JOT.Models
         public int CatID { get; set; }
 
         public string? Cat_Name { get; set; }
+
+        public ICollection<Product> Products { get; set; }
     }
 }

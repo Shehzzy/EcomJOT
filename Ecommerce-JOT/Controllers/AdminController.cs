@@ -2,6 +2,7 @@
 using Ecommerce_JOT.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ecommerce_JOT.Controllers
 {
@@ -20,16 +21,31 @@ namespace Ecommerce_JOT.Controllers
             return View();
         }
 
-        public IActionResult ShowProducts()
+        public async Task<IActionResult> ShowProducts()
         {
+            List<Product> products = await _dbcontext.Products.Include(p => p.Category).ToListAsync();
+            //List<Product> products = await _dbcontext.Products.ToListAsync();
 
-            return View();
+            return View(products);
         }
 
-        public IActionResult CreateProducts()
+        public async Task<IActionResult> CreateProducts()
         {
-          
-            return View();
+          var categories = await _dbcontext.Categories.ToListAsync();
+            ProductFormVM productvm = new ProductFormVM
+            {
+                Categories = new SelectList(categories, "CatID", "Cat_Name")
+            };
+            return View(productvm);
+        }
+       
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProducts(ProductFormVM productFormVM)
+        {
+           await _dbcontext.Products.AddAsync(productFormVM.Product);
+            await _dbcontext.SaveChangesAsync();
+            return RedirectToAction("ShowProducts");
         }
 
         public async Task< IActionResult> ShowCategories()
@@ -91,16 +107,12 @@ namespace Ecommerce_JOT.Controllers
            
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCat(int id)
+        public async Task<ActionResult> DeleteCat(int id)
         {
             var cat = await _dbcontext.Categories.FirstOrDefaultAsync(c => c.CatID == id);
-            if( cat == null)
-            {
-                throw new Exception("Category not found");
-            }
             _dbcontext.Categories.Remove(cat);
             await _dbcontext.SaveChangesAsync();
+            TempData["Message"] = "Category deleted successfully";
             return RedirectToAction("ShowCategories");
         }
 
