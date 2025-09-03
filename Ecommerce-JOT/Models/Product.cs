@@ -19,7 +19,10 @@ namespace Ecommerce_JOT.Models
         public int CatID { get; set; }
 
         public Category? Category { get; set; }
+<<<<<<< HEAD
 
         public string? ImageName { get; set; }
+=======
+>>>>>>> ffc69165a0c64bc42136f58b300b43f1a04f5e67
     }
 }
