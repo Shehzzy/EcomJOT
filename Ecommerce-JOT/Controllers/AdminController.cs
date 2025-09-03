@@ -24,10 +24,6 @@ namespace Ecommerce_JOT.Controllers
         public async Task<IActionResult> ShowProducts()
         {
             List<Product> products = await _dbcontext.Products.Include(p => p.Category).ToListAsync();
-<<<<<<< HEAD
-=======
-            //List<Product> products = await _dbcontext.Products.ToListAsync();
->>>>>>> ffc69165a0c64bc42136f58b300b43f1a04f5e67
 
             return View(products);
         }
@@ -46,7 +42,6 @@ namespace Ecommerce_JOT.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProducts(ProductFormVM productFormVM)
         {
-<<<<<<< HEAD
             // Image file upload 2-Sep
 
             // get directory
@@ -66,8 +61,6 @@ namespace Ecommerce_JOT.Controllers
             productFormVM.Product.ImageName = filename;
 
 
-=======
->>>>>>> ffc69165a0c64bc42136f58b300b43f1a04f5e67
            await _dbcontext.Products.AddAsync(productFormVM.Product);
             await _dbcontext.SaveChangesAsync();
             return RedirectToAction("ShowProducts");

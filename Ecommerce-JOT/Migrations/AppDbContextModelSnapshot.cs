@@ -48,12 +48,9 @@ namespace Ecommerce_JOT.Migrations
                     b.Property<int>("CatID")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
 
-=======
->>>>>>> ffc69165a0c64bc42136f58b300b43f1a04f5e67
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
