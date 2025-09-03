@@ -24,6 +24,21 @@
                 </tr>
             }
         }
-       
+
     </tbody>
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@{
+    if(TempData["Message"] != null)
+    {
+        <script>
+                    Swal.fire({
+              title: "Category Deleted Successfully",
+              text: "Deleted",
+              icon: "success"
+            });
+        </script>
+    }
+}

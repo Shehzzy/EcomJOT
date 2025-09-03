@@ -45,6 +45,12 @@ namespace Ecommerce_JOT.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<int>("CatID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -59,7 +65,25 @@ namespace Ecommerce_JOT.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("CatID");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Ecommerce_JOT.Models.Product", b =>
+                {
+                    b.HasOne("Ecommerce_JOT.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CatID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Ecommerce_JOT.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

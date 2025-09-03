@@ -15,4 +15,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\assets\images\pexels-mikebirdy-170811.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\images\pexels-steve-1509534.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
