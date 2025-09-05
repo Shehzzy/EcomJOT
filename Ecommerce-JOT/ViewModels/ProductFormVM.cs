@@ -10,5 +10,7 @@ namespace Ecommerce_JOT.ViewModels
         public SelectList Categories { get; set; }
 
         public IFormFile ImageFile { get; set; }
+
+        public string ErrorMessage  { get; set; }
     }
 }

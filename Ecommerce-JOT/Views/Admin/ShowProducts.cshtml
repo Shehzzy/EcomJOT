@@ -29,9 +29,9 @@
                     <td>@products.qty</td>
                     <td>@products.Category?.Cat_Name</td>
                     <td>
-                        <a href="@Url.Action("UpdateCat", "Admin", new {id = products.ID})">Update </a>
+                        <a href="@Url.Action("Updateprod", "Admin", new {id = products.ID})">Update </a>
 
-                        <a href="@Url.Action("DeleteCat", "Admin", new {id = products.ID})"> Delete</a>
+                        <a href="@Url.Action("deleteprod", "Admin", new {id = products.ID})"> Delete</a>
                     </td>
                 </tr>
             }

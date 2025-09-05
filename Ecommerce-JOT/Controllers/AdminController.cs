@@ -30,14 +30,15 @@ namespace Ecommerce_JOT.Controllers
 
         public async Task<IActionResult> CreateProducts()
         {
-          var categories = await _dbcontext.Categories.ToListAsync();
+            var categories = await _dbcontext.Categories.ToListAsync();
             ProductFormVM productvm = new ProductFormVM
             {
                 Categories = new SelectList(categories, "CatID", "Cat_Name")
             };
+
             return View(productvm);
         }
-       
+
 
         [HttpPost]
         public async Task<IActionResult> CreateProducts(ProductFormVM productFormVM)
@@ -54,19 +55,19 @@ namespace Ecommerce_JOT.Controllers
 
             using (var stream = new FileStream(fileupload, FileMode.Create))
             {
-                //await productFormVM.ImageFile.CopyToAsync(stream);
+
                 await productFormVM.ImageFile.CopyToAsync(stream);
             }
 
             productFormVM.Product.ImageName = filename;
 
 
-           await _dbcontext.Products.AddAsync(productFormVM.Product);
+            await _dbcontext.Products.AddAsync(productFormVM.Product);
             await _dbcontext.SaveChangesAsync();
             return RedirectToAction("ShowProducts");
         }
 
-        public async Task< IActionResult> ShowCategories()
+        public async Task<IActionResult> ShowCategories()
         {
             List<Category> categories = await _dbcontext.Categories.ToListAsync();
             return View(categories);
@@ -82,7 +83,7 @@ namespace Ecommerce_JOT.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategories(Category category)
         {
-           await  _dbcontext.Categories.AddAsync(category);
+            await _dbcontext.Categories.AddAsync(category);
             await _dbcontext.SaveChangesAsync();
             return RedirectToAction("ShowCategories");
         }
@@ -105,7 +106,7 @@ namespace Ecommerce_JOT.Controllers
                 //Existing entry
                 var cat = await _dbcontext.Categories.FirstOrDefaultAsync(c => c.CatID == category.CatID);
 
-                if(cat == null)
+                if (cat == null)
                 {
                     throw new Exception("Category not found");
                 }
@@ -122,7 +123,7 @@ namespace Ecommerce_JOT.Controllers
                 categoryVM.ErrorMessage = ex.Message.ToString();
                 return View(categoryVM);
             }
-           
+
         }
 
         public async Task<ActionResult> DeleteCat(int id)
@@ -150,8 +151,83 @@ namespace Ecommerce_JOT.Controllers
         //}
 
 
-        public IActionResult Error() {
+        public IActionResult Error()
+        {
             return View();
+        }
+
+        public async Task<IActionResult> Updateprod(int id)
+        {
+            var Product = await _dbcontext.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.ID == id);
+            var categories = await _dbcontext.Categories.ToListAsync();
+            ProductFormVM productvm = new ProductFormVM
+            {
+                Categories = new SelectList(categories, "CatID", "Cat_Name")
+            };
+            productvm.Product = Product;
+            productvm.ErrorMessage = "";
+            return View(productvm);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Updateprod(ProductFormVM productFormVM)
+        {
+            try
+            {
+
+                var getProduct = await _dbcontext.Products.FirstOrDefaultAsync(p => p.ID == productFormVM.Product.ID);
+                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/assets/images");
+                Directory.CreateDirectory(uploads);
+
+
+                if (!string.IsNullOrEmpty(getProduct.ImageName))
+                {
+                    var oldImgPath = Path.Combine(uploads, getProduct.ImageName);
+
+                    if (System.IO.File.Exists(oldImgPath))
+                    {
+                        System.IO.File.Delete(oldImgPath);
+                    }
+                }
+                //create directory
+
+                var filename = productFormVM.ImageFile.FileName;
+                var fileupload = Path.Combine(uploads, filename);
+
+                using (var stream = new FileStream(fileupload, FileMode.Create))
+                {
+
+                    await productFormVM.ImageFile.CopyToAsync(stream);
+                }
+
+                getProduct.ImageName = filename;
+
+
+                getProduct.Name = productFormVM.Product.Name;
+                getProduct.price = productFormVM.Product.price;
+                getProduct.description = productFormVM.Product.description;
+                getProduct.qty = productFormVM.Product.qty;
+                getProduct.CatID = productFormVM.Product.CatID;
+                _dbcontext.Products.Update(getProduct);
+                await _dbcontext.SaveChangesAsync();
+                return RedirectToAction("ShowProducts");
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Product not found");
+            }
+
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> deleteprod(int id)
+
+        {
+            var prodcuts = await _dbcontext.Products.FirstOrDefaultAsync(p => p.ID == id);
+            _dbcontext.Products.Remove(prodcuts);
+            await _dbcontext.SaveChangesAsync();
+            return RedirectToAction("ShowProducts");
+        }
     }
 }
